@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -33,6 +32,8 @@ func GetItem(i int, s *goquery.Selection) {
 	types := film.Find(".film-item-type").Text()
 	episode := film.Find(".film-item-episode").Text()
 
+	// rating := film.Find(".film-item-rating")
+
 	item := ItemParse{
 		Title:   title,
 		Href:    href,
@@ -44,8 +45,7 @@ func GetItem(i int, s *goquery.Selection) {
 
 	Items = append(Items, item)
 
-	p(3, " → ", "[+]", i, href, title, genres)
-	p(2, " → ", "[+]", strings.Repeat("~", 39))
+	p(2, " → ", "[+]", i, href, title, genres)
 }
 
 func GetHtml(url string) (*goquery.Document, error) {
@@ -86,8 +86,24 @@ func GetScrape(url string) []ItemParse {
 
 func main() {
 	Url := "https://jetfilm.net/serials/"
-	FilmItems := GetScrape(Url)
+	UrlPage := Url
+	f := "./json/item.json"
+	for v := range 3 {
+		if v > 0 {
+			UrlPage = fmt.Sprintf("%s?page=%d", Url, v+1)
+		}
 
-	// add json
-	writeJson(FilmItems, "./json/item.json")
+		FilmItems := GetScrape(UrlPage)
+
+		p(3, " ~ ", "[+]", v+1, UrlPage, len(FilmItems))
+
+		// add json
+		dataFiles, err := loadJson(f)
+		if err != nil {
+			writeJson(FilmItems, f)
+		} else if len(dataFiles) > 0 {
+			dataFiles = append(dataFiles, FilmItems...)
+			writeJson(dataFiles, f)
+		}
+	}
 }

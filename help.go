@@ -22,8 +22,8 @@ func p(color int, sep string, str ...any) {
 	fmt.Printf("%s%s%s", suffixColor, fmt.Sprint(newStr...), "\033[0m\n")
 }
 
+// write to files
 func writeJson(data any, filename string) error {
-	// write to files
 	jsonData, err := json.MarshalIndent(data, "", "\t")
 	if err != nil {
 		return fmt.Errorf("error marchal %s: %w", filename, err)
@@ -34,6 +34,21 @@ func writeJson(data any, filename string) error {
 		return fmt.Errorf("error write file %s: %w", filename, err)
 	}
 
-	fmt.Printf("JSON data write to file ~ %s\n", filename)
 	return nil
+}
+
+// loading files
+func loadJson(filename string) ([]ItemParse, error) {
+	plan, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+
+	var data []ItemParse
+	err = json.Unmarshal(plan, &data)
+	if err != nil {
+		return nil, err
+	}
+
+	return data, nil
 }
