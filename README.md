@@ -6,7 +6,7 @@ go mod tidy
 go run .
 ```
 
-## json struct
+## 🍅 json struct
 
 ```
 {
