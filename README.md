@@ -12,7 +12,10 @@ go run .
 {
     "title": "Газета (2025)",
     "href": "/8427572",
-    "genres": "документальный, комедия",
+    "genres": [
+        "документальный",
+        "комедия"
+    ],
     "img": "https://st.kp.yandex.net/images/film_iphone/iphone360_8427572.jpg",
     "types": "сериал",
     "episode": {

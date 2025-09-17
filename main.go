@@ -12,13 +12,13 @@ import (
 )
 
 type ItemParse struct {
-	Title   string  `json:"title"`
-	Href    string  `json:"href"`
-	Genres  string  `json:"genres"`
-	Img     string  `json:"img"`
-	Types   string  `json:"types"`
-	Episode Episode `json:"episode"`
-	Rating  Rating  `json:"rating"`
+	Title   string   `json:"title"`
+	Href    string   `json:"href"`
+	Genres  []string `json:"genres"`
+	Img     string   `json:"img"`
+	Types   string   `json:"types"`
+	Episode Episode  `json:"episode"`
+	Rating  Rating   `json:"rating"`
 }
 
 type Rating struct {
@@ -103,7 +103,6 @@ func GetItem(i int, s *goquery.Selection) {
 	item := ItemParse{
 		Title:  title,
 		Href:   href,
-		Genres: genres,
 		Img:    img,
 		Types:  strings.TrimSpace(types),
 		Rating: GetRating(film),
@@ -112,6 +111,10 @@ func GetItem(i int, s *goquery.Selection) {
 	episode, err := GetEpisode(film)
 	if err == nil {
 		item.Episode = episode
+	}
+
+	if len(genres) != 0 {
+		item.Genres = strings.Split(genres, ", ")
 	}
 
 	Items = append(Items, item)
